@@ -1,4 +1,4 @@
-version: "3.8"
+# docker-compose.yaml
 services:
   frontend:
     build:
@@ -7,10 +7,8 @@ services:
     container_name: frontend-app
     ports:
       - "80:80"
-    networks:
-      - appnet
-    depends_on:
-      - backend
+    networks: [appnet]
+    depends_on: [backend]
 
   backend:
     build:
@@ -18,32 +16,19 @@ services:
       dockerfile: Dockerfile
     container_name: backend-app
     ports:
-      - "86:80"
+      - "86:80"            # change to "86:3000" if your app listens on 3000
     environment:
-      - DB_HOST=mysql
-      - DB_USERNAME=admin
-      - DB_PASSWORD=Devops123
-      - PORT=3306
-    networks:
-      - appnet
-    depends_on:
-      - mysql
-
-  mysql:
-    build:
-      context: ./mysql
-      dockerfile: Dockerfile
-    container_name: mysql-db
-    environment:
-      - MYSQL_ROOT_PASSWORD=Cloud122
-      - MYSQL_DATABASE=test
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=Devops123
-    ports:
-      - "3306:3306"
-    networks:
-      - appnet
+      DB_HOST: database-1.c9meigac6f36.ap-south-1.rds.amazonaws.com
+      DB_USERNAME: admin
+      DB_PASSWORD: simon1234   # use your actual RDS password
+      DB_NAME: test
+      DB_PORT: "3306"
+      # optional, if your code uses these:
+      HOST: database-1.c9meigac6f36.ap-south-1.rds.amazonaws.com
+      DB_USER: admin
+    networks: [appnet]
 
 networks:
   appnet:
     driver: bridge
+
